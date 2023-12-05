@@ -1,8 +1,13 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:uber_clone_demo/src/core/asset/app_assets.dart';
+import 'package:uber_clone_demo/src/core/globle/global.dart';
+import 'package:uber_clone_demo/src/features/auth/view/screens/login_screen.dart';
+import 'package:uber_clone_demo/src/features/main/view/screen/main_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -22,6 +27,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _passwordVisible = false;
 
   final _formKey = GlobalKey<FormState>();
+
+
+  _submit()async{
+
+    if(_formKey.currentState!.validate()){
+      await firebaseAuth.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passController.text
+      ).then((auth)async{
+        currentUser=auth.user;
+
+        if(currentUser!=null){
+          Map userMap={
+            "id":currentUser!.uid,
+            "name":nameController.text.trim(),
+            "email":emailController.text.trim(),
+            "phone":phoneController.text.trim(),
+            "address":addressController.text.trim()
+
+          };
+          DatabaseReference userRef=FirebaseDatabase.instance.ref().child("user");
+          userRef.child(currentUser!.uid).set(userMap);
+        }
+         Fluttertoast.showToast(msg: "Successfully Registered!");
+        Navigator.push(context, MaterialPageRoute(builder: (c)=>const MainScreen()));
+
+      }).catchError((onError){
+        Fluttertoast.showToast(msg: "Error Occurred! :\n $onError");
+      });
+    }else{
+      Fluttertoast.showToast(msg: "Not all Failed are valid");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Form(
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -309,18 +348,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.cyan.shade900,
                               minimumSize: const Size(double.infinity, 50)),
-                          onPressed: () {},
+                          onPressed: () {
+                            _submit();
+                          },
                           child: const Text("Register"),
                         ),
-                        SizedBox(height: 10,),
+                        const SizedBox(
+                          height: 10,
+                        ),
                         GestureDetector(
-                          onTap: (){
-
-                          },
-                            child: Text("Forget Password!!",style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 16
-                        ),))
+                          onTap: () {},
+                          child: const Text(
+                            "Forget Password!!",
+                            style: TextStyle(color: Colors.green, fontSize: 16),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Have an Account?"),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (c)=>const LoginScreen()));
+                              },
+                              child: const Text(
+                                "Sign In.",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            )
+                          ],
+                        )
                       ],
                     ),
                   ),

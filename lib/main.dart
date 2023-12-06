@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_clone_demo/src/core/theme/app_theme.dart';
+import 'package:uber_clone_demo/src/features/auth/view/screens/forget_password_screen.dart';
 import 'package:uber_clone_demo/src/features/auth/view/screens/registers_screen.dart';
 import 'package:uber_clone_demo/src/features/splash/view/screen/splash_screen.dart';
 import 'firebase_options.dart';

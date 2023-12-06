@@ -20,6 +20,10 @@ dependencies:
   firebase_database: ^10.3.6
   firebase_storage: ^11.5.3
   fluttertoast: ^8.2.4
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  location: ^5.0.3
+  geocoder2: ^1.4.0
 
 dev_dependencies:
   flutter_test:

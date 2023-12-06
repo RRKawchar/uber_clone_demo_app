@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uber_clone_demo/src/core/asset/app_assets.dart';
 import 'package:uber_clone_demo/src/core/globle/global.dart';
 import 'package:uber_clone_demo/src/features/auth/view/screens/forget_password_screen.dart';
+import 'package:uber_clone_demo/src/features/auth/view/screens/registers_screen.dart';
 import 'package:uber_clone_demo/src/features/main/view/screen/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -200,8 +201,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(
                               width: 5,
                             ),
+
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const RegisterScreen()));
+                              },
                               child: const Text(
                                 "Register In.",
                                 style: TextStyle(
